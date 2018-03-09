@@ -10,7 +10,7 @@ require __DIR__ . "/../vendor/autoload.php";
 $adapter = new \Carica\Io\Event\Loop\React();
 $adapter->loop(\Amp\ReactAdapter\ReactAdapter::get());
 
-$loop = \Carica\Io\Event\Loop\Factory::get();
+\Carica\Io\Event\Loop\Factory::set($adapter);
 
 $board = new \Carica\Firmata\Board(
     \Carica\Io\Stream\Serial\Factory::create($port, 57600)

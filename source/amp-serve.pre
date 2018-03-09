@@ -23,13 +23,14 @@ $router->route("GET", "/", ($request, $response) => {
 $operation = 1;
 
 $router->route("GET", "/connect", ($request, $response) => {
-    $response->write($operation++ . ". connecting to {$port}<br>");
-    $response->flush();
+    print $operation++ . ". connecting to {$port}\n";
+
+    $response->end($operation++ . ". connecting to {$port}<br>");
 
     $board
         ->activate()
         ->done(() => {
-            $response->end($operation++ . ". connected to {$port}<br>");
+            print $operation++ . ". connected to {$port}\n";
 
             $control1A = $board->pins[2];
             $control1A->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
@@ -45,6 +46,26 @@ $router->route("GET", "/connect", ($request, $response) => {
             $enableB = $board->pins[10];
             $enableB->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
         });
+});
+
+$router->route("GET", "/forward", ($request, $response) => {
+    $enableA->digital = 1;
+    $enableB->digital = 1;
+
+    $control1A->digital = 1;
+    $control2A->digital = 0;
+
+    $control1B->digital = 1;
+    $control2B->digital = 0;
+
+    $response->end("forward<br>");
+});
+
+$router->route("GET", "/stop", ($request, $response) => {
+    $enableA->digital = 0;
+    $enableB->digital = 0;
+
+    $response->end("stop<br>");
 });
 
 return $host;
