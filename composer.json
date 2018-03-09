@@ -1,0 +1,11 @@
+{
+    "require": {
+        "carica/firmata": "dev-master",
+        "pre/async": "dev-feature/expressions",
+        "pre/short-closures": "dev-feature/expressions",
+        "amphp/aerys": "^0.7.4",
+        "amphp/react-adapter": "^1.1"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -1,0 +1,50 @@
+<?php
+
+[$loop, $board, $port] = require __DIR__ . "/bootstrap.php";
+
+use Aerys\Host;
+use Aerys\Request;
+use Aerys\Response;
+use Aerys\Router;
+
+use function Aerys\root;
+use function Aerys\router;
+
+$host = new Host();
+$host->expose("*", 8080);
+
+$host->use($root = root(.."/public"));
+$host->use($router = new Router());
+
+$router->route("GET", "/", ($request, $response) => {
+    $response->end("hello world");
+});
+
+$operation = 1;
+
+$router->route("GET", "/connect", ($request, $response) => {
+    $response->write($operation++ . ". connecting to {$port}<br>");
+    $response->flush();
+
+    $board
+        ->activate()
+        ->done(() => {
+            $response->end($operation++ . ". connected to {$port}<br>");
+
+            $control1A = $board->pins[2];
+            $control1A->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
+            $control2A = $board->pins[3];
+            $control2A->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
+            $enableA = $board->pins[9];
+            $enableA->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
+
+            $control1B = $board->pins[4];
+            $control1B->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
+            $control2B = $board->pins[5];
+            $control2B->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
+            $enableB = $board->pins[10];
+            $enableB->mode = \Carica\Firmata\Pin::MODE_OUTPUT;
+        });
+});
+
+return $host;
