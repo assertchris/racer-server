@@ -12,6 +12,8 @@ $adapter->loop(\Amp\ReactAdapter\ReactAdapter::get());
 
 \Carica\Io\Event\Loop\Factory::set($adapter);
 
+$loop = \Carica\Io\Event\Loop\Factory::get();
+
 $board = new \Carica\Firmata\Board(
     \Carica\Io\Stream\Serial\Factory::create($port, 57600)
 );
